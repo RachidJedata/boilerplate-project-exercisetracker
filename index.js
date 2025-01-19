@@ -114,15 +114,13 @@ app.post('/api/users/:id/exercises', async (req, res) => {
 app.get('/api/users/:id/logs', async (req, res) => {
   const users = await findUsers({ _id: req.params.id });
   const user = users[0];
+  const log = user.log.slice().map( ({description,duration,date}) => ({description,duration,date}));
+  
   res.json({
     _id: user._id,
     username: user.username,
     count: user.log.length, // Number of log entries
-    log: {
-      description: user.log.description,
-      duration: user.log.duration,
-      date: user.log.date
-    } // Array of log entries
+    log
   });
 })
 
