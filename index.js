@@ -104,7 +104,14 @@ app.post('/api/users/:id/exercises', async (req, res) => {
   }
   const updatedUser = await updateUser(userId, data);
 
-  res.json(updatedUser);
+  res.json({
+    _id:userId,
+    username:updateUser.username,
+    description: data.description,
+    duration: data.duration,
+    date: data.date,
+
+  });
 
 });
 
