@@ -99,7 +99,7 @@ app.post('/api/users/:id/exercises', async (req, res) => {
   const userId = req.params.id;
   const data = {
     description: req.body.description,
-    duration: req.body.duration,
+    duration: parseInt(req.body.duration),
     date: (new Date(req.body.date)).toDateString()
   }
   const updatedUser = await updateUser(userId, data);
@@ -107,10 +107,9 @@ app.post('/api/users/:id/exercises', async (req, res) => {
   res.json({
     _id:userId,
     username:updatedUser.username,
-    description: data.description,
-    duration: data.duration,
     date: data.date,
-
+    duration: data.duration,
+    description: data.description
   });
 
 });
