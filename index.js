@@ -16,7 +16,6 @@ app.get('/', (req, res) => {
 
 const schema = new mongoose.Schema({
   username: String,
-  count: { type: Number, default: 0 },
   log: [{
     description: { type: String, required: true },
     duration: { type: Number, required: true },
@@ -45,9 +44,7 @@ const updateUser = async (userId, data) => {
     if (!user) return null;
 
     // Add the new log entry to the user's log array
-    const exerciseCount = user.log.push(data);
-
-    user.count = exerciseCount;
+    user.log.push(data);
 
     // Save the updated user
     await user.save();
@@ -105,8 +102,8 @@ app.post('/api/users/:id/exercises', async (req, res) => {
   const updatedUser = await updateUser(userId, data);
 
   res.json({
-    _id:userId,
-    username:updatedUser.username,
+    _id: userId,
+    username: updatedUser.username,
     date: data.date,
     duration: data.duration,
     description: data.description
@@ -114,10 +111,19 @@ app.post('/api/users/:id/exercises', async (req, res) => {
 
 });
 
-app.get('/api/users/:id/logs', async (req,res)=>{
-  const users = findUsers({_id:req.params.id});
+app.get('/api/users/:id/logs', async (req, res) => {
+  const users = await findUsers({ _id: req.params.id });
   const user = users[0];
-  res.json(user);
+  res.json({
+    _id: user._id,
+    username: user.username,
+    count: user.log.length, // Number of log entries
+    log: {
+      description: user.log.description,
+      duration: user.log.duration,
+      date: user.log.date
+    } // Array of log entries
+  });
 })
 
 
